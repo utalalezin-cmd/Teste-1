@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Romântico - Pedido de Namoro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Lato:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: linear-gradient(135deg, #f5f0eb 0%, #faf8f5 50%, #f0ebe5 100%);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Tela 1 - Pedido de Nome */
+        .screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.7s ease-out;
+            pointer-events: none;
+        }
+
+        .screen.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #screen1 {
+            background: linear-gradient(rgba(245, 240, 235, 0.9), rgba(245, 240, 235, 0.7)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23f5f0eb;stop-opacity:1" /><stop offset="100%" style="stop-color:%23faf8f5;stop-opacity:1" /></linearGradient></defs><rect width="1200" height="800" fill="url(%23grad1)"/><circle cx="100" cy="100" r="80" fill="%23d4a574" opacity="0.1"/><circle cx="1100" cy="700" r="100" fill="%23c9b896" opacity="0.1"/></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+
+        #screen2 {
+            background: linear-gradient(rgba(245, 240, 235, 0.8), rgba(245, 240, 235, 0.8)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><radialGradient id="grad2"><stop offset="0%" style="stop-color:%23faf8f5;stop-opacity:0.5" /><stop offset="100%" style="stop-color:%23f5f0eb;stop-opacity:0.2" /></radialGradient></defs><rect width="1200" height="800" fill="url(%23grad2)"/></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+
+        #screen3 {
+            background: linear-gradient(rgba(245, 240, 235, 0.9), rgba(245, 240, 235, 0.7)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23f5f0eb;stop-opacity:1" /><stop offset="100%" style="stop-color:%23faf8f5;stop-opacity:1" /></linearGradient></defs><rect width="1200" height="800" fill="url(%23grad3)"/></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+
+        #screen4 {
+            background: linear-gradient(rgba(245, 240, 235, 0.9), rgba(245, 240, 235, 0.7)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23f5f0eb;stop-opacity:1" /><stop offset="100%" style="stop-color:%23faf8f5;stop-opacity:1" /></linearGradient></defs><rect width="1200" height="800" fill="url(%23grad4)"/></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+
+        #screen5 {
+            background: linear-gradient(rgba(245, 240, 235, 0.9), rgba(245, 240, 235, 0.7)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="grad5" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23f5f0eb;stop-opacity:1" /><stop offset="100%" style="stop-color:%23faf8f5;stop-opacity:1" /></linearGradient></defs><rect width="1200" height="800" fill="url(%23grad5)"/></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .content {
+            text-align: center;
+            max-width: 600px;
+            padding: 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes heartBeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes floating {
+            0%, 100% {
+                transform: translateY(0px) translateX(0px);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-20px) translateX(10px);
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .decoration {
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease-out;
+            animation-delay: 0.1s;
+            animation-fill-mode: both;
+        }
+
+        .decoration svg {
+            width: 120px;
+            height: 120px;
+            opacity: 0.8;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: #5a4a3a;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease-out;
+            animation-delay: 0.2s;
+            animation-fill-mode: both;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #8b7355;
+            margin-bottom: 30px;
+            font-weight: 300;
+            animation: fadeInUp 0.8s ease-out;
+            animation-delay: 0.3s;
+            animation-fill-mode: both;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease-out;
+            animation-delay: 0.4s;
+            animation-fill-mode: both;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            border: none;
+            border-bottom: 2px solid #c9b896;
+            background: transparent;
+            color: #5a4a3a;
+            font-family: 'Lato', sans-serif;
+            text-align: center;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input[type="text"]::placeholder {
+            color: #d4a574;
+            opacity: 0.5;
+        }
+
+        input[type="text"]:focus {
+            border-bottom-color: #d4a574;
+            box-shadow: 0 2px 8px rgba(212, 165, 116, 0.2);
+        }
+
+        .instruction {
+            font-size: 0.9rem;
+            color: #a89080;
+            margin-top: 20px;
+            font-weight: 300;
+        }
+
+        .arrow-down {
+            margin-top: 40px;
+            animation: bounce 2s infinite;
+        }
+
+        .arrow-down svg {
+            width: 24px;
+            height: 24px;
+            color: #c9b896;
+        }
+
+        /* Mensagem de leitura - Tela 2 */
+        .reading-message {
+            font-size: 1.3rem;
+            color: #6b5a4a;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            font-weight: 300;
+            animation: fadeInUp 0.8s ease-out;
+            animation-delay: 0.2s;
+            animation-fill-mode: both;
+        }
+
+        .reading-message strong {
+            color: #8b7355;
+            font-weight: 600;
+        }
+
+        .reading-message .highlight {
+            display: block;
+            margin-top: 15px;
+            color: #8b7355;
+            font-weight: 300;
+        }
+
+        /* Botões */
+        .buttons-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+            min-height: 80px;
+            animation: fadeInUp 0.8s ease-out;
+            animation-delay: 0.5s;
+            animation-fill-mode: both;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #d4a574 0%, #c9b896 100%);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(212, 165, 116, 0.3);
+        }
+
+        .btn-yes:active {
+            transform: scale(0.95);
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #a89080 0%, #9a8070 100%);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-no:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-no:active {
+            transform: scale(0.95);
+        }
+
+        .attempts-text {
+            font-size: 0.9rem;
+            color: #a89080;
+            margin-top: 20px;
+            font-weight: 300;
+            animation: fadeInUp 0.8s ease-out;
+            animation-delay: 0.6s;
+            animation-fill-mode: both;
+        }
+
+        .no-button-message {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(201, 184, 150, 0.3);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            color: #6b5a4a;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Tela de Sucesso */
+        #success-screen {
+            background: linear-gradient(135deg, #f5f0eb 0%, #faf8f5 50%, #f0ebe5 100%);
+            z-index: 100;
+        }
+
+        .success-content {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .heart-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 30px;
+            animation: heartBeat 1.5s ease-in-out infinite;
+        }
+
+        .heart-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .success-title {
+            font-size: 4rem;
+            color: #5a4a3a;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            font-size: 1.5rem;
+            color: #8b7355;
+            margin-bottom: 20px;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .success-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(201, 184, 150, 0.4);
+            border-radius: 10px;
+            font-size: 1.2rem;
+            color: #6b5a4a;
+        }
+
+        /* Confete de corações */
+        .confetti-heart {
+            position: fixed;
+            pointer-events: none;
+            font-size: 2rem;
+            animation: floating 4s ease-in-out infinite;
+        }
+
+        /* Transição */
+        .transition-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f5f0eb 0%, #faf8f5 50%, #f0ebe5 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .transition-screen.show {
+            opacity: 1;
+        }
+
+        .transition-heart {
+            width: 80px;
+            height: 80px;
+            animation: heartBeat 1.5s ease-in-out infinite;
+        }
+
+        .transition-heart svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .reading-message {
+                font-size: 1.1rem;
+            }
+
+            .buttons-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            button {
+                width: 100%;
+                max-width: 250px;
+            }
+
+            .success-title {
+                font-size: 2.5rem;
+            }
+
+            .success-message {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Tela 1: Pedido de Nome -->
+        <div id="screen1" class="screen active">
+            <div class="content">
+                <div class="decoration">
+                    <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 50 Q50 20 100 50 T180 50" stroke="#c9b896" stroke-width="2" fill="none"/>
+                        <circle cx="100" cy="50" r="8" fill="#d4a574" opacity="0.6"/>
+                    </svg>
+                </div>
+                <h1>Qual é o seu nome?</h1>
+                <p class="subtitle">Preciso saber como chamar a pessoa que amo</p>
+                <div class="form-group">
+                    <input type="text" id="nameInput" placeholder="Digite seu nome..." autofocus>
+                </div>
+                <p class="instruction">Clique na tela para continuar</p>
+                <div class="arrow-down">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tela 2: Primeira Declaração -->
+        <div id="screen2" class="screen">
+            <div class="content">
+                <div class="decoration">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 85 C20 70, 5 55, 5 40 C5 25, 15 15, 25 15 C35 15, 45 25, 50 35 C55 25, 65 15, 75 15 C85 15, 95 25, 95 40 C95 55, 80 70, 50 85 Z" fill="#d4a574" stroke="#c9b896" stroke-width="1"/>
+                    </svg>
+                </div>
+                <div class="reading-message">
+                    <strong id="personName2"></strong>,
+                </div>
+                <div class="reading-message">
+                    Já li mais de mil livros, já li mais de 10 mil artigos, já perdi a conta de quantos documentários eu assisti
+                    <span class="highlight">e não encontrei motivos para não te amar...</span>
+                </div>
+                <p class="instruction">Clique na tela para continuar</p>
+                <div class="arrow-down">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tela 3: Pergunta do Time -->
+        <div id="screen3" class="screen">
+            <div class="content">
+                <div class="decoration">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 85 C20 70, 5 55, 5 40 C5 25, 15 15, 25 15 C35 15, 45 25, 50 35 C55 25, 65 15, 75 15 C85 15, 95 25, 95 40 C95 55, 80 70, 50 85 Z" fill="#d4a574" stroke="#c9b896" stroke-width="1"/>
+                    </svg>
+                </div>
+                <p class="subtitle" style="margin-top: 40px;">Qual é o seu time?</p>
+                <div class="form-group">
+                    <input type="text" id="teamInput" placeholder="Digite o nome do seu time...">
+                </div>
+                <p class="instruction">Clique na tela para continuar</p>
+                <div class="arrow-down">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tela 4: Resposta do Time (Declaração) -->
+        <div id="screen4" class="screen">
+            <div class="content">
+                <div class="decoration">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 85 C20 70, 5 55, 5 40 C5 25, 15 15, 25 15 C35 15, 45 25, 50 35 C55 25, 65 15, 75 15 C85 15, 95 25, 95 40 C95 55, 80 70, 50 85 Z" fill="#d4a574" stroke="#c9b896" stroke-width="1"/>
+                    </svg>
+                </div>
+                <div class="reading-message">
+                    Se <strong id="teamName"></strong> perder uma partida importante, perder a Champions League...
+                </div>
+                <div class="reading-message">
+                    <span class="highlight">Mas se eu perder alguém importante como você, eu perco a minha chance de ser feliz.</span>
+                </div>
+                <p class="instruction">Clique na tela para continuar</p>
+                <div class="arrow-down">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tela 5: Segunda Declaração -->
+        <div id="screen5" class="screen">
+            <div class="content">
+                <div class="decoration">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 85 C20 70, 5 55, 5 40 C5 25, 15 15, 25 15 C35 15, 45 25, 50 35 C55 25, 65 15, 75 15 C85 15, 95 25, 95 40 C95 55, 80 70, 50 85 Z" fill="#d4a574" stroke="#c9b896" stroke-width="1"/>
+                    </svg>
+                </div>
+                <div class="reading-message">
+                    <strong id="personName5"></strong>,
+                </div>
+                <div class="reading-message">
+                    Você é a razão pela qual meu coração bate mais forte a cada dia.
+                    <span class="highlight">Quer fazer parte da minha vida para sempre?</span>
+                </div>
+                <p class="instruction">Clique na tela para continuar</p>
+                <div class="arrow-down">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tela 6: Pergunta de Namoro -->
+        <div id="screen6" class="screen">
+            <div class="content">
+                <div class="decoration">
+                    <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                        <g transform="translate(50, 20)">
+                            <path d="M50 100 C20 85, 5 70, 5 55 C5 40, 15 30, 25 30 C35 30, 45 40, 50 50 C55 40, 65 30, 75 30 C85 30, 95 40, 95 55 C95 70, 80 85, 50 100 Z" fill="#d4a574" stroke="#c9b896" stroke-width="1"/>
+                        </g>
+                    </svg>
+                </div>
+                <h1 id="screen6Name"></h1>
+                <p class="subtitle" style="font-size: 1.8rem; margin-bottom: 40px;">Você quer namorar comigo?</p>
+                <div class="buttons-container">
+                    <button class="btn-yes" id="btnYes">Sim</button>
+                    <button class="btn-no" id="btnNo">Não</button>
+                </div>
+                <p id="attemptsText" class="attempts-text" style="display: none;"></p>
+                <div id="noButtonMessage" class="no-button-message" style="display: none;">
+                    Parece que você não tem escolha... 😊
+                </div>
+                <div class="arrow-down">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tela de Sucesso -->
+        <div id="success-screen" class="screen">
+            <div class="success-content">
+                <div class="heart-icon">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 85 C20 70, 5 55, 5 40 C5 25, 15 15, 25 15 C35 15, 45 25, 50 35 C55 25, 65 15, 75 15 C85 15, 95 25, 95 40 C95 55, 80 70, 50 85 Z" fill="#d4a574" stroke="#c9b896" stroke-width="1"/>
+                    </svg>
+                </div>
+                <h1 class="success-title">Sim!</h1>
+                <p class="success-message">Você acabou de fazer a pessoa mais feliz do mundo.</p>
+                <p class="success-message" id="successPersonName"></p>
+                <div class="success-box">
+                    ✨ Parabéns! Você agora é meu(minha) namorado(a) ✨
+                </div>
+            </div>
+        </div>
+
+        <!-- Tela de Transição -->
+        <div class="transition-screen" id="transitionScreen">
+            <div class="transition-heart">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 85 C20 70, 5 55, 5 40 C5 25, 15 15, 25 15 C35 15, 45 25, 50 35 C55 25, 65 15, 75 15 C85 15, 95 25, 95 40 C95 55, 80 70, 50 85 Z" fill="url(#heartGradient)" stroke="#c9b896" stroke-width="1"/>
+                    <defs>
+                        <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#d4a574;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#c9b896;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Estado da aplicação
+        let currentScreen = 1;
+        let personName = '';
+        let teamAnswer = '';
+        let noAttempts = 0;
+        const MAX_NO_ATTEMPTS = 5;
+
+        // Elementos do DOM
+        const screen1 = document.getElementById('screen1');
+        const screen2 = document.getElementById('screen2');
+        const screen3 = document.getElementById('screen3');
+        const screen4 = document.getElementById('screen4');
+        const screen5 = document.getElementById('screen5');
+        const screen6 = document.getElementById('screen6');
+        const successScreen = document.getElementById('success-screen');
+        const transitionScreen = document.getElementById('transitionScreen');
+
+        const nameInput = document.getElementById('nameInput');
+        const teamInput = document.getElementById('teamInput');
+        const btnYes = document.getElementById('btnYes');
+        const btnNo = document.getElementById('btnNo');
+
+        // Limpar inputs ao carregar a página
+        window.addEventListener('load', () => {
+            nameInput.value = '';
+            teamInput.value = '';
+            nameInput.focus();
+        });
+
+        // Função para mostrar transição
+        function showTransition() {
+            transitionScreen.classList.add('show');
+            setTimeout(() => {
+                transitionScreen.classList.remove('show');
+            }, 800);
+        }
+
+        // Função para trocar de tela
+        function goToScreen(screenNumber) {
+            showTransition();
+            
+            setTimeout(() => {
+                // Remove classe active de todas as telas
+                document.querySelectorAll('.screen').forEach(screen => {
+                    screen.classList.remove('active');
+                    screen.classList.add('fade-out');
+                });
+
+                // Adiciona classe active à tela desejada
+                if (screenNumber === 1) {
+                    screen1.classList.add('active');
+                    screen1.classList.remove('fade-out');
+                    nameInput.focus();
+                } else if (screenNumber === 2) {
+                    screen2.classList.add('active');
+                    screen2.classList.remove('fade-out');
+                    document.getElementById('personName2').textContent = personName;
+                } else if (screenNumber === 3) {
+                    screen3.classList.add('active');
+                    screen3.classList.remove('fade-out');
+                    teamInput.focus();
+                } else if (screenNumber === 4) {
+                    screen4.classList.add('active');
+                    screen4.classList.remove('fade-out');
+                    document.getElementById('teamName').textContent = teamAnswer;
+                } else if (screenNumber === 5) {
+                    screen5.classList.add('active');
+                    screen5.classList.remove('fade-out');
+                    document.getElementById('personName5').textContent = personName;
+                } else if (screenNumber === 6) {
+                    screen6.classList.add('active');
+                    screen6.classList.remove('fade-out');
+                    document.getElementById('screen6Name').textContent = personName + ',';
+                    noAttempts = 0;
+                    document.getElementById('attemptsText').style.display = 'none';
+                    document.getElementById('noButtonMessage').style.display = 'none';
+                    btnNo.style.display = 'block';
+                    resetNoButton();
+                } else if (screenNumber === 7) {
+                    successScreen.classList.add('active');
+                    successScreen.classList.remove('fade-out');
+                    document.getElementById('successPersonName').textContent = 
+                        personName + ', você é tudo que eu sempre quis. Vamos construir uma história linda juntos.';
+                    createConfetti();
+                }
+
+                currentScreen = screenNumber;
+            }, 400);
+        }
+
+        // Tela 1: Capturar nome
+        screen1.addEventListener('click', () => {
+            if (nameInput.value.trim()) {
+                personName = nameInput.value.trim();
+                goToScreen(2);
+            }
+        });
+
+        nameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && nameInput.value.trim()) {
+                personName = nameInput.value.trim();
+                goToScreen(2);
+            }
+        });
+
+        // Tela 2: Primeira Declaração
+        screen2.addEventListener('click', () => {
+            goToScreen(3);
+        });
+
+        // Tela 3: Capturar time
+        screen3.addEventListener('click', () => {
+            if (teamInput.value.trim()) {
+                teamAnswer = teamInput.value.trim();
+                goToScreen(4);
+            }
+        });
+
+        teamInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && teamInput.value.trim()) {
+                teamAnswer = teamInput.value.trim();
+                goToScreen(4);
+            }
+        });
+
+        // Tela 4: Resposta do Time
+        screen4.addEventListener('click', () => {
+            goToScreen(5);
+        });
+
+        // Tela 5: Segunda Declaração
+        screen5.addEventListener('click', () => {
+            goToScreen(6);
+        });
+
+        // Tela 6: Botão Sim
+        btnYes.addEventListener('click', () => {
+            goToScreen(7);
+        });
+
+        // Tela 6: Botão Não (fugidio)
+        function resetNoButton() {
+            btnNo.style.transform = 'translate(0, 0)';
+        }
+
+        function moveNoButton() {
+            if (noAttempts < MAX_NO_ATTEMPTS) {
+                const randomX = (Math.random() - 0.5) * 300;
+                const randomY = (Math.random() - 0.5) * 300;
+                btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
+                noAttempts++;
+
+                if (noAttempts >= MAX_NO_ATTEMPTS) {
+                    setTimeout(() => {
+                        btnNo.style.display = 'none';
+                        document.getElementById('noButtonMessage').style.display = 'block';
+                    }, 300);
+                }
+
+                // Atualizar texto de tentativas
+                if (noAttempts > 0 && noAttempts < MAX_NO_ATTEMPTS) {
+                    document.getElementById('attemptsText').textContent = `Tentativas: ${noAttempts}/${MAX_NO_ATTEMPTS}`;
+                    document.getElementById('attemptsText').style.display = 'block';
+                }
+            }
+        }
+
+        btnNo.addEventListener('mouseenter', moveNoButton);
+        btnNo.addEventListener('click', moveNoButton);
+        btnNo.addEventListener('touchstart', moveNoButton);
+
+        // Criar confete de corações
+        function createConfetti() {
+            for (let i = 0; i < 12; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'confetti-heart';
+                heart.textContent = '❤️';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.top = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 0.5 + 's';
+                document.body.appendChild(heart);
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 4000);
+            }
+        }
+
+        // Inicializar
+        goToScreen(1);
+    </script>
+</body>
+</html>
